@@ -22,5 +22,7 @@ python manage.py migrate
 echo "==> Corrigindo permissões de arquivos para UID 1000..."
 chown -R 1000:1000 /app
 
-echo "==> Iniciando servidor Django na porta 8000..."
-python manage.py runserver 0.0.0.0:8000
+# # echo "==> Iniciando servidor Django na porta 8000..."
+# python manage.py runserver 0.0.0.0:8000
+echo "==> Iniciando servidor ASGI com Daphne na porta 8000..."
+daphne -b 0.0.0.0 -p 8000 chat_project.asgi:application

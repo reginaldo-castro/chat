@@ -12,3 +12,7 @@ urlpatterns = [
     path('api/rooms/<int:room_id>/messages/', MessageListView.as_view(), name='api_room_messages'),
     path('api/messages/new/', MessageCreateView.as_view(), name='api_create_message'),
 ]
+
+urlpatterns += [
+    path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True, schema=schema))),
+]

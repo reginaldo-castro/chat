@@ -38,8 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'chat',
-    'channels',
+    
 ]
+
+INSTALLED_APPS += [
+    'rest_framework',
+    'channels',
+    'graphene_django',
+    ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -132,7 +138,11 @@ CHANNEL_LAYERS = {
             'hosts': [f'redis://:{REDIS_PASSWORD}@redis:6379/0'],
         },
     },
-}   
+}
+
+GRAPHENE = {
+    'SCHEMA': 'chat.schema.schema'
+}
 
 # CACHES = {
 #     "default": {

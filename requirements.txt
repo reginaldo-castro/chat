@@ -19,3 +19,6 @@ celery
 psycopg2-binary
 django-allauth
 google-api-python-client
+celery[redis]
+flower
+django_celery_beat

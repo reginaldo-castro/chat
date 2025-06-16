@@ -4,7 +4,6 @@ services:
   web:
     build:
       context: ..
-    command: daphne -b 0.0.0.0 -p 8000 chat_project.asgi:application
     ports:
       - "8000:8000"
       - "8001:8001"
@@ -18,10 +17,28 @@ services:
 
   db:
     image: postgres:14
+    container_name: chat_db
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
     env_file:
       - ../.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  memcached:
+    image: memcached:alpine
+    ports:
+      - "11211:11211"
 
   redis:
     image: redis:7
@@ -31,7 +48,13 @@ services:
     command: redis-server --requirepass supersecreta123
     volumes:
       - redis_data:/data
-      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    container_name: redis_admin
+    ports:
+      - "8004:8004"
+    restart: always
 
 volumes:
   postgres_data:

@@ -12,3 +12,10 @@ daphne
 django-redis
 channels_redis
 graphene-django
+python-memcached==1.62
+pymemcache
+django-oauth-toolkit
+celery
+psycopg2-binary
+django-allauth
+google-api-python-client

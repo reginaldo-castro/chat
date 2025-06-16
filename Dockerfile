@@ -1,6 +1,15 @@
 # Use a Python base image
 FROM python:3.12
 
+# Labels
+LABEL maintainer="reginaldo-castro.github.io/reginaldo.github.io/"
+LABEL version="1.0"
+LABEL description="Container Django + PostgreSQL + Redis + Daphne CHAT"
+
+# Variáveis de ambiente
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     bash \

@@ -1,28 +1,31 @@
 #!/bin/bash
 set -e
 
-# Espera o banco ficar disponível
-echo "Esperando o banco iniciar..."
-while ! nc -z db 5432; do
+DB_HOST=${DB_HOST:-db}
+DB_PORT=${DB_PORT:-5432}
+
+echo "🟦 Aguardando o banco de dados em $DB_HOST:$DB_PORT..."
+while ! nc -z $DB_HOST $DB_PORT; do
   sleep 1
 done
+echo "✅ Banco de dados disponível!"
 
-echo "==> Verificando se o projeto Django já foi criado..."
+# Remover essa etapa — o projeto já deve estar criado antes
+# if [ ! -d "chat_project" ]; then
+#     echo "🚀 Criando o projeto Django..."
+#     django-admin startproject chat_project .
+# else
+#     echo "📁 Projeto Django já existe. Pulando criação."
+# fi
 
-if [ ! -d "chat_project" ]; then
-    echo "==> Criando o projeto Django..."
-    django-admin startproject chat_project .
-else
-    echo "==> Projeto já existe. Pulando criação."
-fi
+echo "⚙️ Aplicando migrações..."
+python manage.py migrate --noinput
 
-echo "==> Aplicando migrações iniciais..."
-python manage.py migrate
+echo "📜 Coletando arquivos estáticos..."
+python manage.py collectstatic --noinput
 
-echo "==> Corrigindo permissões de arquivos para UID 1000..."
+echo "🔐 Corrigindo permissões de arquivos..."
 chown -R 1000:1000 /app
 
-# # echo "==> Iniciando servidor Django na porta 8000..."
-# python manage.py runserver 0.0.0.0:8000
-echo "==> Iniciando servidor ASGI com Daphne na porta 8000..."
+echo "🚀 Iniciando servidor ASGI com Daphne na porta 8000..."
 daphne -b 0.0.0.0 -p 8000 chat_project.asgi:application

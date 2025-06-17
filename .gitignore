@@ -6,4 +6,3 @@ db.sqlite3
 docker-compose.yml
 Dockerfile
 .dockerignore
-infra/

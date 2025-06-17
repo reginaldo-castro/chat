@@ -2,3 +2,8 @@
 db.sqlite3
 *.pyc
 *.staticfiles
+
+docker-compose.yml
+Dockerfile
+.dockerignore
+infra/
